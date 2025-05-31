@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash # type: ignore
 import calendar as cal
 from datetime import datetime, date, timedelta
 from collections import defaultdict
