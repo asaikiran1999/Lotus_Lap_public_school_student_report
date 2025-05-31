@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Activity Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <img src="static/images/llps_logo.jpg" alt="School Logo" class="header-logo">
+        <div class="header-title">LOTUS LAP PUBLIC SCHOOL</div>
+        <div class="header-slogan">"An Educated Child Is World's Greatest Treasure."</div>
+    </div>
+
+    <div class="container">
+        <!-- Student Profile -->
+        <div class="student-profile">
+            <img src="static/images/student.png.jpg" alt="Student DP" class="student-dp">
+            <div class="student-info">
+                <span><strong>Name:</strong> Aryan Sharma</span>
+                <span><strong>Roll No:</strong> 17</span>
+                <span><strong>Class:</strong> 10</span>
+                <span><strong>Section:</strong> B</span>
+            </div>
+        </div>
+
+        <!-- Attendance Calendar -->
+        <div class="section-title">Attendance</div>
+<div class="calendar">
+    <form method="get" action="#attendance" style="margin-bottom: 14px; display: flex; align-items: center; gap: 12px;">
+        <label for="attendance-month" style="font-weight:600; color:#2d6cdf;">Select Month & Year:</label>
+        <input type="month" id="attendance-month" name="attendance-month" style="padding:6px 12px; border-radius:6px; border:1px solid #bdbdbd;" required
+               value="{{ selected_month if selected_month else '' }}">
+        <button type="submit" style="background:#2d6cdf; color:#fff; border:none; border-radius:6px; padding:6px 18px; font-weight:600; margin-left:6px; cursor:pointer;">Show</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in calendar %}
+            <tr>
+                {% for day in week %}
+                {% if day %}
+                    <td>
+                        <div>{{ day.day }}</div>
+                        {% set date_str = day.strftime('%Y-%m-%d') %}
+                        {% if attendance_data.get(date_str) == 'Present' %}
+                            <span class="status-dot present" title="Present"></span>
+                        {% elif attendance_data.get(date_str) == 'Absent' %}
+                            <span class="status-dot absent" title="Absent"></span>
+                        {% elif attendance_data.get(date_str) == 'Holiday' %}
+                            <span class="status-dot holiday" title="Holiday"></span>
+                        {% elif attendance_data.get(date_str) == 'Event' %}
+                            <span class="status-dot event" title="Event"></span>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="calendar-legend" style="margin-top:10px;">
+        <span><span class="status-dot present"></span>Present</span>
+        <span><span class="status-dot absent"></span>Absent</span>
+        <span><span class="status-dot holiday"></span>Holiday</span>
+        <span><span class="status-dot event"></span>Event</span>
+    </div>
+</div>
+
+<div class="section-title">Performance</div>
+<div class="performance-section">
+    <form method="get" action="#performance" style="margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
+        <!-- Retain month selection if present -->
+        {% if selected_month %}
+            <input type="hidden" name="attendance-month" value="{{ selected_month }}">
+        {% endif %}
+        <label for="subject" style="font-weight:600; color:#2d6cdf;">Select Subject:</label>
+        <select id="subject" name="subject" onchange="this.form.submit()" style="padding:6px 12px; border-radius:6px; border:1px solid #bdbdbd;">
+            <option value="overall" {% if selected_subject=='overall' %}selected{% endif %}>Overall</option>
+            {% for subj in subjects %}
+            <option value="{{ subj }}" {% if selected_subject==subj %}selected{% endif %}>{{ subj }}</option>
+            {% endfor %}
+        </select>
+    </form>
+    <div class="bar-graph">
+        {% for test_type, score in performance_scores.items() %}
+        <div class="bar-row">
+            <div class="bar-label">{{ test_type }}</div>
+            <div class="bar">
+                {% if score is not none %}
+                    <div class="bar-fill" style="width: {{ score }}%;">{{ score }}%</div>
+                {% else %}
+                    <div class="bar-absent">Absent</div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="font-size:0.97rem; color:#888; margin-top:6px;">
+        <em>Note: Scores on absent days are not shown.</em>
+    </div>
+</div>
+
+
+        <!-- Extra Curricular Activities -->
+        <div class="section-title">Extra-Curricular Activities</div>
+        <div class="extra-section">
+            <button class="extra-toggle" onclick="toggleExtra()">Show Activities</button>
+            <div class="extra-content" id="extraContent">
+                <div class="extra-cards">
+                    <div class="extra-card">
+                        <div class="badge">Sports</div>
+                        <div><strong>Football</strong> - Inter-school Winner</div>
+                        <div style="font-size:0.95rem; color:#666;">District Level, 2024</div>
+                    </div>
+                    <div class="extra-card">
+                        <div class="badge">Cultural</div>
+                        <div><strong>Classical Dance</strong> - 1st Prize</div>
+                        <div style="font-size:0.95rem; color:#666;">Annual Fest, 2024</div>
+                    </div>
+                    <div class="extra-card">
+                        <div class="badge">Competition</div>
+                        <div><strong>Math Olympiad</strong> - State Top 10</div>
+                        <div style="font-size:0.95rem; color:#666;">State Level, 2024</div>
+                    </div>
+                    <div class="extra-card">
+                        <div class="badge">Art</div>
+                        <div><strong>Painting</strong> - 2nd Prize</div>
+                        <div style="font-size:0.95rem; color:#666;">National Art Contest, 2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="section-title">Feedback / Query</div>
+        <form class="feedback-section">
+            <label for="subject">Select Subject/Activity</label>
+            <select id="subject" name="subject" required>
+                <option value="">-- Select --</option>
+                <option value="Math">Math</option>
+                <option value="Science">Science</option>
+                <option value="English">English</option>
+                <option value="Social Studies">Social Studies</option>
+                <option value="Sports">Sports</option>
+                <option value="Cultural">Cultural Activity</option>
+                <option value="Other">Other</option>
+            </select>
+            <label for="message">Your Feedback / Query</label>
+            <textarea id="message" name="message" placeholder="Type your feedback or query here..." required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>   
+</body>
+</html>
