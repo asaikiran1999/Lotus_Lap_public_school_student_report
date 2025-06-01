@@ -161,6 +161,19 @@
             <textarea id="message" name="message" placeholder="Type your feedback or query here..." required></textarea>
             <button type="submit">Submit</button>
         </form>
-    </div>   
+    </div> 
+    <script>
+        function toggleExtra() {
+            var content = document.getElementById('extraContent');
+            var btn = document.querySelector('.extra-toggle');
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                btn.textContent = "Show Activities";
+            } else {
+                content.style.display = "block";
+                btn.textContent = "Hide Activities";
+            }
+        }
+    </script>
 </body>
 </html>
