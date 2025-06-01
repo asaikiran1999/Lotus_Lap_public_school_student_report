@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash # type: ignore
+from flask import Flask, render_template, request, redirect, url_for # type: ignore
 import calendar as cal
 from datetime import datetime, date, timedelta
 from collections import defaultdict
@@ -110,7 +110,7 @@ def feedback():
     message = request.form.get('message')
     # Here you can save to a database or send an email. For demo, just print:
     print(f"Feedback received: Subject: {subject}, Message: {message}")
-    flash("Thank you for your feedback/query!")
+    # flash("Thank you for your feedback/query!")
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
